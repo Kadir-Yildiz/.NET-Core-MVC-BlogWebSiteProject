@@ -39,12 +39,12 @@ namespace Bloggie.Controllers
             return View(vm);
         }
         [Route("p/{slug}")]
-        public IActionResult Post(string slug)
+        public async Task<IActionResult> Post(string slug)
         {
-            
+            ViewBag.User = await _userManager.GetUserAsync(User);
             var post = _db.Posts.Include(x=> x.Author).Where(x => !x.IsDraft).FirstOrDefault(x => x.Slug == slug);
 
-            ViewBag.Comments = _db.Comments.Where(c => c.Post == post).ToList();
+            ViewBag.Comments = _db.Comments.Where(c => c.Post == post && c.Author.DisplayName != null).Include(x => x.Author).ToList();
             if (post == null) return NotFound();
             
             return View(post);
@@ -67,7 +67,7 @@ namespace Bloggie.Controllers
             comment.Author = applicationUser;
             _db.Comments.Add(comment);
             _db.SaveChanges();
-            ViewBag.Comments = _db.Comments.Where(c => c.Post == post).Include(x=> x.Author.DisplayName).ToList();
+            ViewBag.Comments = _db.Comments.Where(c => c.Post == post && c.Author.DisplayName!=null).Include(x=> x.Author).ToList();
             return RedirectToAction("Post", new {slug=comment.Post.Slug});
             
 

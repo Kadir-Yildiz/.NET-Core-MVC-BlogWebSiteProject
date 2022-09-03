@@ -12,34 +12,41 @@
 </div>
 
   
-<h3>Comments</h3>
+<h3 class="mt-5">Comments</h3>
 <hr />
 
-    @*<div class="card-body">
+    <div class="card-body">
     @if (@ViewBag.Comments.Count>0)
     {
         @foreach (Comment item in @ViewBag.Comments)
         {
-            <p>
-                @item.Content
-            </p>
-            <small class="text-muted">
-                Post by @item.Author.DisplayName on @item.CreatedTime.ToShortDateString()
-            </small>
-            <hr />
+            @if (@item.Author.DisplayName != null && @item.Content!=null)
+            {
+                <p>
+                    @item.Content
+                </p>
+                <small class="text-muted">
+                    Written by @item.Author.DisplayName on @item.CreatedTime.ToShortDateString()
+                </small>
+                <hr />
+            }
+            
         }
-    }*@
+    }
 
 
 
+    @if (@ViewBag.User!= null)
+    {
+        <form asp-action="AddComment" asp-controller="Home" method="post">
+            <div class="form-group">
+                <input asp-for="@Model.Id" type="hidden" class="form-control" />
+                <label></label>
+                <textarea asp-for="@Model.CommentContent" class="form-control" rows="3" placeholder="Write your comment here"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block btn-sm mt-2 mb-4 float-end ">Add Comment</button>
+        </form>
+    }
 
-
-    <form asp-action="AddComment" asp-controller="Home"  method="post">
-        <div class="form-group">
-            <input asp-for="@Model.Id" type="hidden" class="form-control" />
-            <label >Write Your Comment</label>
-            <textarea asp-for="@Model.CommentContent" class="form-control" rows="3"  placeholder="Write your comment here"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block ">Add Comment</button>
-    </form>
+    
 </div>

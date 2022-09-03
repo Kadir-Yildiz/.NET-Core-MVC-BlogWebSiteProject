@@ -4,7 +4,7 @@
 	{
 		public async static Task SeedAsync(ApplicationDbContext db, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
 		{
-            //await db.Database.MigrateAsync();
+            await db.Database.MigrateAsync();
 
             var adminEmail = "admin@example.com";
 			var adminPass = "P@ssword1";
